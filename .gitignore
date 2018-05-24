@@ -3,6 +3,7 @@
 .idea/libraries/*
 .idea/vcs.xml
 .idea/workspace.xml
+.dart_tool/
 .pub/
 .settings/
 build/

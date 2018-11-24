@@ -7,10 +7,6 @@
 # This file contains the analysis options used by Flutter editors, such as Atom.
 
 analyzer:
-  language:
-    enableStrictCallChecks: true
-    enableSuperMixins: true
-    enableAssertInitializer: true
   strong-mode:
     implicit-dynamic: false
   errors:

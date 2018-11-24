@@ -8,7 +8,7 @@ import 'dart:io';
 const int _kTestServerPort = 11111;
 
 Future<Null> main() async {
-  final HttpServer testServer = await HttpServer.bind(InternetAddress.LOOPBACK_IP_V4, _kTestServerPort);
+  final HttpServer testServer = await HttpServer.bind(InternetAddress.loopbackIPv4, _kTestServerPort);
   await for (HttpRequest request in testServer) {
     if (request.uri.path.endsWith('/immediate_success.png')) {
       request.response.add(_kTransparentImage);

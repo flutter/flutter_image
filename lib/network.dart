@@ -28,7 +28,7 @@ class NetworkImageWithRetry extends ImageProvider<NetworkImageWithRetry> {
   /// Creates an object that fetches the image at the given [url].
   ///
   /// The arguments must not be null.
-  const NetworkImageWithRetry(this.url, { this.scale: 1.0, this.fetchStrategy: defaultFetchStrategy })
+  const NetworkImageWithRetry(this.url, { this.scale: 1.0, this.fetchStrategy: defaultFetchStrategy, this.headers})
       : assert(url != null),
         assert(scale != null),
         assert(fetchStrategy != null);
@@ -41,6 +41,8 @@ class NetworkImageWithRetry extends ImageProvider<NetworkImageWithRetry> {
 
   /// The scale to place in the [ImageInfo] object of the image.
   final double scale;
+
+  final Map<String, String> headers;
 
   /// The strategy used to fetch the [url] and retry when the fetch fails.
   ///
@@ -115,8 +117,12 @@ class NetworkImageWithRetry extends ImageProvider<NetworkImageWithRetry> {
       io.HttpClientRequest request;
       try {
         request = await _client.getUrl(instructions.uri).timeout(instructions.timeout);
+        if(headers != null){
+          headers.forEach((key, val) {
+            request.headers.add(key, val);
+          });
+        }
         final io.HttpClientResponse response = await request.close().timeout(instructions.timeout);
-
         if (response == null || response.statusCode != 200) {
           throw new FetchFailure._(
             totalDuration: stopwatch.elapsed,
@@ -333,18 +339,6 @@ typedef bool TransientHttpStatusCodePredicate(int statusCode);
 /// those HTTP status codes considered transient by a
 /// [transientHttpStatusCodePredicate] function.
 class FetchStrategyBuilder {
-  /// A list of HTTP status codes that can generally be retried.
-  ///
-  /// You may want to use a different list depending on the needs of your
-  /// application.
-  static const List<int> defaultTransientHttpStatusCodes = const <int>[
-    0,   // Network error
-    408, // Request timeout
-    500, // Internal server error
-    502, // Bad gateway
-    503, // Service unavailable
-    504 // Gateway timeout
-  ];
 
   /// Creates a fetch strategy builder.
   ///
@@ -363,6 +357,19 @@ class FetchStrategyBuilder {
        assert(exponentialBackoffMultiplier != null),
        assert(transientHttpStatusCodePredicate != null);
 
+  /// A list of HTTP status codes that can generally be retried.
+  ///
+  /// You may want to use a different list depending on the needs of your
+  /// application.
+  static const List<int> defaultTransientHttpStatusCodes = const <int>[
+    0,   // Network error
+    408, // Request timeout
+    500, // Internal server error
+    502, // Bad gateway
+    503, // Service unavailable
+    504 // Gateway timeout
+  ];
+  
   /// Maximum amount of time a single fetch attempt is allowed to take.
   final Duration timeout;
 

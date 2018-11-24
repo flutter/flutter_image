@@ -30,7 +30,9 @@ void main() {
         _imageUrl('immediate_success.png'),
       );
 
-      subject.load(subject).addListener(expectAsync2((ImageInfo image, bool synchronousCall) {
+      subject
+          .load(subject)
+          .addListener(expectAsync2((ImageInfo image, bool synchronousCall) {
         expect(image.image.height, 1);
         expect(image.image.width, 1);
       }));
@@ -49,7 +51,7 @@ void main() {
         if (attemptCount == 6) {
           maxAttemptCountReached();
         }
-        await new Future<Null>.delayed(Duration.ZERO);
+        await new Future<Null>.delayed(Duration.zero);
         fakeAsync.elapse(const Duration(seconds: 60));
         attemptCount++;
       }
@@ -64,8 +66,10 @@ void main() {
         },
       );
 
-      subject.load(subject).addListener(expectAsync2((ImageInfo image, bool synchronousCall) {
-        expect(errorLog.single.exception, const isInstanceOf<FetchFailure>());
+      subject
+          .load(subject)
+          .addListener(expectAsync2((ImageInfo image, bool synchronousCall) {
+        expect(errorLog.single.exception, isInstanceOf<FetchFailure>());
         expect(image, null);
       }));
     });
@@ -79,7 +83,7 @@ void main() {
       int attemptCount = 0;
       Future<Null> onAttempt() async {
         expect(attemptCount, lessThan(2));
-        await new Future<Null>.delayed(Duration.ZERO);
+        await new Future<Null>.delayed(Duration.zero);
         fakeAsync.elapse(const Duration(seconds: 60));
         attemptCount++;
       }
@@ -94,8 +98,10 @@ void main() {
         },
       );
 
-      subject.load(subject).addListener(expectAsync2((ImageInfo image, bool synchronousCall) {
-        expect(errorLog.single.exception, const isInstanceOf<FetchFailure>());
+      subject
+          .load(subject)
+          .addListener(expectAsync2((ImageInfo image, bool synchronousCall) {
+        expect(errorLog.single.exception, isInstanceOf<FetchFailure>());
         expect(image, null);
       }));
     });
@@ -119,9 +125,34 @@ void main() {
         },
       );
 
-      subject.load(subject).addListener(expectAsync2((ImageInfo image, bool synchronousCall) {
+      subject
+          .load(subject)
+          .addListener(expectAsync2((ImageInfo image, bool synchronousCall) {
         expect(image.image.height, 1);
         expect(image.image.width, 1);
+      }));
+    });
+
+    test('sets headers when not null', () async {
+      final NetworkImageWithRetry subject = new NetworkImageWithRetry(
+          _imageUrl('immediate_success.png'),
+          headers: {'headerKey': 'headerValue'});
+
+      subject
+          .load(subject)
+          .addListener(expectAsync2((ImageInfo image, bool synchronousCall) {
+        expect(subject.headers, {'headerKey': 'headerValue'});
+      }));
+    });
+
+    test('should not set headers when null', () async {
+      final NetworkImageWithRetry subject =
+          new NetworkImageWithRetry(_imageUrl('immediate_success.png'));
+
+      subject
+          .load(subject)
+          .addListener(expectAsync2((ImageInfo image, bool synchronousCall) {
+        expect(subject.headers, null);
       }));
     });
   });

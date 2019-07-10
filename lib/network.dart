@@ -24,6 +24,7 @@ import 'package:flutter/widgets.dart';
 /// [defaultFetchStrategy] to obtain instructions for fetching the URL.
 ///
 /// The image will be cached regardless of cache headers from the server.
+@immutable
 class NetworkImageWithRetry extends ImageProvider<NetworkImageWithRetry> {
   /// Creates an object that fetches the image at the given [url].
   ///

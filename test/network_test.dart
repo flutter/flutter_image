@@ -3,6 +3,7 @@
 // BSD-style license that can be found in the LICENSE file.
 
 import 'dart:async';
+import 'dart:io' show HttpOverrides;
 import 'package:flutter/foundation.dart';
 import 'package:flutter/painting.dart';
 import 'package:flutter_image/network.dart';
@@ -14,6 +15,9 @@ String _imageUrl(String fileName) {
 }
 
 void main() {
+  AutomatedTestWidgetsFlutterBinding();
+  HttpOverrides.global = null;
+
   group('NetworkImageWithRetry', () {
     setUp(() {
       FlutterError.onError = (FlutterErrorDetails error) {
@@ -30,10 +34,12 @@ void main() {
         _imageUrl('immediate_success.png'),
       );
 
-      subject.load(subject).addListener(ImageStreamListener(expectAsync2((ImageInfo image, bool synchronousCall) {
-        expect(image.image.height, 1);
-        expect(image.image.width, 1);
-      })));
+      subject.load(subject).addListener(
+        ImageStreamListener(expectAsync2((ImageInfo image, bool synchronousCall) {
+          expect(image.image.height, 1);
+          expect(image.image.width, 1);
+        })),
+      );
     });
 
     test('retries 6 times then gives up', () async {
@@ -64,10 +70,12 @@ void main() {
         },
       );
 
-      subject.load(subject).addListener(ImageStreamListener(expectAsync2((ImageInfo image, bool synchronousCall) {
-        expect(errorLog.single.exception, isInstanceOf<FetchFailure>());
-        expect(image, null);
-      })));
+      subject.load(subject).addListener(
+        ImageStreamListener(expectAsync2((ImageInfo image, bool synchronousCall) {
+          expect(errorLog.single.exception, isInstanceOf<FetchFailure>());
+          expect(image, null);
+        })),
+      );
     });
 
     test('gives up immediately on non-retriable errors (HTTP 404)', () async {
@@ -94,10 +102,12 @@ void main() {
         },
       );
 
-      subject.load(subject).addListener(ImageStreamListener(expectAsync2((ImageInfo image, bool synchronousCall) {
-        expect(errorLog.single.exception, isInstanceOf<FetchFailure>());
-        expect(image, null);
-      })));
+      subject.load(subject).addListener(
+        ImageStreamListener(expectAsync2((ImageInfo image, bool synchronousCall) {
+          expect(errorLog.single.exception, isInstanceOf<FetchFailure>());
+          expect(image, null);
+        })),
+      );
     });
 
     test('succeeds on successful retry', () async {
@@ -119,10 +129,12 @@ void main() {
         },
       );
 
-      subject.load(subject).addListener(ImageStreamListener(expectAsync2((ImageInfo image, bool synchronousCall) {
-        expect(image.image.height, 1);
-        expect(image.image.width, 1);
-      })));
+      subject.load(subject).addListener(
+        ImageStreamListener(expectAsync2((ImageInfo image, bool synchronousCall) {
+          expect(image.image.height, 1);
+          expect(image.image.width, 1);
+        })),
+      );
     });
   });
 }

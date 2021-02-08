@@ -8,8 +8,8 @@ network with a retry mechanism.
 Example:
 
 ```dart
-var avatar = new Image(
-  image: new NetworkImageWithRetry('http://example.com/avatars/123.jpg'),
+var avatar = Image(
+  image: NetworkImageWithRetry('http://example.com/avatars/123.jpg'),
 );
 ```
 

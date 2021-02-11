@@ -16,8 +16,8 @@ jobs:
       - name: Setup Flutter SDK
         run: |
           git clone https://github.com/flutter/flutter.git -b master
-          export PATH=$PATH:$(pwd)/flutter/bin
-          export FLUTTER_HOME=$(pwd)/flutter
+          echo "${HOME}/flutter/bin" >> $GITHUB_PATH
+          echo "FLUTTER_HOME=${HOME}/flutter" >> $GITHUB_ENV
         
       - name: Run Flutter Doctor
         run: flutter doctor

@@ -13,12 +13,17 @@ jobs:
     steps:
       - uses: actions/checkout@v2
 
-      - name: Setup Flutter SDK
-        run: |
-          git clone https://github.com/flutter/flutter.git -b master
-          echo "${HOME}/flutter/bin" >> $GITHUB_PATH
-          echo "FLUTTER_HOME=${HOME}/flutter" >> $GITHUB_ENV
-        
+      - name: Clone Flutter repository with master channel
+        uses: actions/checkout@v2
+        with:
+          repository: 'flutter/flutter'
+          ref: 'master'
+          path: 'flutter'
+          fetch-depth: 0
+
+      - name: Add Flutter to the PATH
+        run: echo "$GITHUB_WORKSPACE/flutter/bin" >> $GITHUB_PATH
+          
       - name: Run Flutter Doctor
         run: flutter doctor
 

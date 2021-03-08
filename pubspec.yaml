@@ -1,5 +1,5 @@
 name: flutter_image
-version: 3.0.0
+version: 4.0.0
 description: >
   Image utilities for Flutter: providers, effects, etc
 author: Flutter Team <flutter-dev@googlegroups.com>
@@ -16,5 +16,5 @@ dev_dependencies:
   test: any
 
 environment:
-  sdk: '>=2.12.0 <3.0.0'
+  sdk: ">=2.12.0 <3.0.0"
   flutter: ">=1.10.15-pre.144"

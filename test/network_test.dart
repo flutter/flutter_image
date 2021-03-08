@@ -34,8 +34,11 @@ void main() {
         _imageUrl('immediate_success.png'),
       );
 
-      subject.load(subject, PaintingBinding.instance.instantiateImageCodec).addListener(
-        ImageStreamListener(expectAsync2((ImageInfo image, bool synchronousCall) {
+      subject
+          .load(subject, PaintingBinding.instance!.instantiateImageCodec)
+          .addListener(
+        ImageStreamListener(
+            expectAsync2((ImageInfo image, bool synchronousCall) {
           expect(image.image.height, 1);
           expect(image.image.width, 1);
         })),
@@ -62,7 +65,7 @@ void main() {
 
       final NetworkImageWithRetry subject = NetworkImageWithRetry(
         _imageUrl('error.png'),
-        fetchStrategy: (Uri uri, FetchFailure failure) {
+        fetchStrategy: (Uri uri, FetchFailure? failure) {
           Timer.run(onAttempt);
           return fakeAsync.run((FakeAsync fakeAsync) {
             return NetworkImageWithRetry.defaultFetchStrategy(uri, failure);
@@ -70,8 +73,11 @@ void main() {
         },
       );
 
-      subject.load(subject, PaintingBinding.instance.instantiateImageCodec).addListener(
-        ImageStreamListener(expectAsync2((ImageInfo image, bool synchronousCall) {
+      subject
+          .load(subject, PaintingBinding.instance!.instantiateImageCodec)
+          .addListener(
+        ImageStreamListener(
+            expectAsync2((ImageInfo image, bool synchronousCall) {
           expect(errorLog.single.exception, isInstanceOf<FetchFailure>());
           expect(image, null);
         })),
@@ -94,7 +100,7 @@ void main() {
 
       final NetworkImageWithRetry subject = NetworkImageWithRetry(
         _imageUrl('does_not_exist.png'),
-        fetchStrategy: (Uri uri, FetchFailure failure) {
+        fetchStrategy: (Uri uri, FetchFailure? failure) {
           Timer.run(onAttempt);
           return fakeAsync.run((FakeAsync fakeAsync) {
             return NetworkImageWithRetry.defaultFetchStrategy(uri, failure);
@@ -102,8 +108,11 @@ void main() {
         },
       );
 
-      subject.load(subject, PaintingBinding.instance.instantiateImageCodec).addListener(
-        ImageStreamListener(expectAsync2((ImageInfo image, bool synchronousCall) {
+      subject
+          .load(subject, PaintingBinding.instance!.instantiateImageCodec)
+          .addListener(
+        ImageStreamListener(
+            expectAsync2((ImageInfo image, bool synchronousCall) {
           expect(errorLog.single.exception, isInstanceOf<FetchFailure>());
           expect(image, null);
         })),
@@ -113,7 +122,7 @@ void main() {
     test('succeeds on successful retry', () async {
       final NetworkImageWithRetry subject = NetworkImageWithRetry(
         _imageUrl('error.png'),
-        fetchStrategy: (Uri uri, FetchFailure failure) async {
+        fetchStrategy: (Uri uri, FetchFailure? failure) async {
           if (failure == null) {
             return FetchInstructions.attempt(
               uri: uri,
@@ -129,8 +138,11 @@ void main() {
         },
       );
 
-      subject.load(subject, PaintingBinding.instance.instantiateImageCodec).addListener(
-        ImageStreamListener(expectAsync2((ImageInfo image, bool synchronousCall) {
+      subject
+          .load(subject, PaintingBinding.instance!.instantiateImageCodec)
+          .addListener(
+        ImageStreamListener(
+            expectAsync2((ImageInfo image, bool synchronousCall) {
           expect(image.image.height, 1);
           expect(image.image.width, 1);
         })),

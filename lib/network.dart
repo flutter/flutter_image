@@ -74,9 +74,7 @@ class NetworkImageWithRetry extends ImageProvider<NetworkImageWithRetry> {
 
   @override
   ImageStreamCompleter load(NetworkImageWithRetry key, DecoderCallback decode) {
-    final Future<ImageInfo> maybeImage =
-        _loadWithRetry(key, decode).then((ImageInfo? value) => value!);
-    return OneFrameImageStreamCompleter(maybeImage,
+    return OneFrameImageStreamCompleter(_loadWithRetry(key, decode),
         informationCollector: () sync* {
       yield ErrorDescription('Image provider: $this');
       yield ErrorDescription('Image key: $key');
@@ -102,7 +100,7 @@ class NetworkImageWithRetry extends ImageProvider<NetworkImageWithRetry> {
     }());
   }
 
-  Future<ImageInfo?> _loadWithRetry(
+  Future<ImageInfo> _loadWithRetry(
       NetworkImageWithRetry key, DecoderCallback decode) async {
     assert(key == this);
 
@@ -141,7 +139,11 @@ class NetworkImageWithRetry extends ImageProvider<NetworkImageWithRetry> {
         final Uint8List bytes = builder.data;
 
         if (bytes.lengthInBytes == 0) {
-          return null;
+          throw FetchFailure._(
+            totalDuration: stopwatch.elapsed,
+            attemptCount: attemptCount,
+            httpStatusCode: response.statusCode,
+          );
         }
 
         final ui.Codec codec = await decode(bytes);
@@ -164,8 +166,9 @@ class NetworkImageWithRetry extends ImageProvider<NetworkImageWithRetry> {
       }
     }
 
-    if (instructions.alternativeImage != null)
-      return instructions.alternativeImage;
+    if (instructions.alternativeImage != null) {
+      return instructions.alternativeImage!;
+    }
 
     assert(lastFailure != null);
 
@@ -176,7 +179,7 @@ class NetworkImageWithRetry extends ImageProvider<NetworkImageWithRetry> {
           ErrorDescription('$runtimeType failed to load ${instructions.uri}'),
     ));
 
-    return null;
+    throw lastFailure;
   }
 
   @override

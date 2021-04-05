@@ -117,9 +117,9 @@ class NetworkImageWithRetry extends ImageProvider<NetworkImageWithRetry> {
       try {
         request = await _client
             .getUrl(instructions.uri)
-            .timeout(instructions.timeout!);
+            .timeout(instructions.timeout);
         final io.HttpClientResponse response =
-            await request.close().timeout(instructions.timeout!);
+            await request.close().timeout(instructions.timeout);
 
         if (response.statusCode != 200) {
           throw FetchFailure._(
@@ -134,7 +134,7 @@ class NetworkImageWithRetry extends ImageProvider<NetworkImageWithRetry> {
               _Uint8ListBuilder(),
               (_Uint8ListBuilder buffer, List<int> bytes) => buffer..add(bytes),
             )
-            .timeout(instructions.timeout!);
+            .timeout(instructions.timeout);
 
         final Uint8List bytes = builder.data;
 
@@ -227,7 +227,7 @@ class FetchInstructions {
     required this.uri,
     this.alternativeImage,
   })  : shouldGiveUp = true,
-        timeout = null;
+        timeout = Duration.zero;
 
   /// Instructs [NetworkImageWithRetry] to attempt to download the image from
   /// the given [uri] and [timeout] if it takes too long.
@@ -244,7 +244,7 @@ class FetchInstructions {
   final bool shouldGiveUp;
 
   /// Timeout for the next network call.
-  final Duration? timeout;
+  final Duration timeout;
 
   /// The URI to use on the next attempt.
   final Uri uri;

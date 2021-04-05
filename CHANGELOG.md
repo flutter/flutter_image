@@ -1,5 +1,10 @@
 # Changelog
 
+## 4.0.0
+
+* **Breaking change**. Updates for Flutter 2.0.0
+- Introduces null safety
+
 ## 3.0.0
 
 * **Breaking change**. Updates for Flutter 1.10.15.

@@ -333,7 +333,7 @@ class _Uint8ListBuilder {
 }
 
 /// Determines whether the given HTTP [statusCode] is transient.
-typedef TransientHttpStatusCodePredicate = bool Function(int? statusCode);
+typedef TransientHttpStatusCodePredicate = bool Function(int statusCode);
 
 /// Builds a [FetchStrategy] function that retries up to a certain amount of
 /// times for up to a certain amount of time.
@@ -392,7 +392,7 @@ class FetchStrategyBuilder {
 
   /// Uses [defaultTransientHttpStatusCodes] to determine if the [statusCode] is
   /// transient.
-  static bool defaultTransientHttpStatusCodePredicate(int? statusCode) {
+  static bool defaultTransientHttpStatusCodePredicate(int statusCode) {
     return defaultTransientHttpStatusCodes.contains(statusCode);
   }
 
@@ -408,9 +408,9 @@ class FetchStrategyBuilder {
         );
       }
 
-      final bool isRetriableFailure =
-          transientHttpStatusCodePredicate(failure.httpStatusCode) ||
-              failure.originalException is io.SocketException;
+      final bool isRetriableFailure = (failure.httpStatusCode != null &&
+              transientHttpStatusCodePredicate(failure.httpStatusCode!)) ||
+          failure.originalException is io.SocketException;
 
       // If cannot retry, give up.
       if (!isRetriableFailure || // retrying will not help

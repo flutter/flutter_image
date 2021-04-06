@@ -172,7 +172,7 @@ class NetworkImageWithRetry extends ImageProvider<NetworkImageWithRetry> {
 
     assert(lastFailure != null);
 
-    FlutterError.onError!(FlutterErrorDetails(
+    FlutterError.onError?(FlutterErrorDetails(
       exception: lastFailure!,
       library: 'package:flutter_image',
       context:

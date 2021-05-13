@@ -1,3 +1,10 @@
+# Moved
+
+This repository is no longer used. The `flutter_image` package has moved to
+[flutter/packages](https://github.com/flutter/packages/tree/master/packages/flutter_image).
+
+---
+
 # Image utilities for Flutter
 
 ## NetworkImageWithRetry
